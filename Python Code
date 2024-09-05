@@ -1,0 +1,41 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.tree import export_text
+from sklearn import tree
+import matplotlib.pyplot as plt
+
+# Step 1: Load the CSV file from the local path (modify this path to your actual file location)
+df_uploaded = pd.read_csv(r'C:\Users\MOHIT\Desktop\creditcard.csv')
+
+# Step 2: Use the entire dataset
+X = df_uploaded[['Time', 'Amount']]  # Adjust if needed
+y = df_uploaded['Class']  # Fraud label
+
+# Step 3: Split data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 4: Create and train the Decision Tree model with increased depth
+model = DecisionTreeClassifier(max_depth=5)  # Increased depth to add more nodes (change to 5 for more complexity)
+
+# Train the model
+model.fit(X_train, y_train)
+
+# Step 5: Make predictions and evaluate the model
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+classification_rep = classification_report(y_test, y_pred)
+
+# Step 6: Print the decision tree rules (with increased nodes)
+tree_rules = export_text(model, feature_names=['Time', 'Amount'])
+print(tree_rules)
+
+# Step 7: Plot the decision tree (this will have more nodes due to increased depth)
+plt.figure(figsize=(12, 8))
+tree.plot_tree(model, feature_names=['Time', 'Amount'], class_names=['Not Fraud', 'Fraud'], filled=True)
+plt.show()
+
+# Step 8: Output the results
+print(f"Accuracy: {accuracy}")
+print(classification_rep)
